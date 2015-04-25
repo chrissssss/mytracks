@@ -23,8 +23,6 @@ import com.google.android.apps.mytracks.fragments.ChooseAccountDialogFragment;
 import com.google.android.apps.mytracks.fragments.ChooseAccountDialogFragment.ChooseAccountCaller;
 import com.google.android.apps.mytracks.fragments.ConfirmSyncDialogFragment;
 import com.google.android.apps.mytracks.fragments.ConfirmSyncDialogFragment.ConfirmSyncCaller;
-import com.google.android.apps.mytracks.fragments.EulaDialogFragment;
-import com.google.android.apps.mytracks.fragments.EulaDialogFragment.EulaCaller;
 import com.google.android.apps.mytracks.fragments.FileTypeDialogFragment;
 import com.google.android.apps.mytracks.fragments.FileTypeDialogFragment.FileTypeCaller;
 import com.google.android.apps.mytracks.fragments.PlayMultipleDialogFragment;
@@ -39,7 +37,6 @@ import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection
 import com.google.android.apps.mytracks.settings.SettingsActivity;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
-import com.google.android.apps.mytracks.util.EulaUtils;
 import com.google.android.apps.mytracks.util.GoogleLocationUtils;
 import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.ListItemUtils;
@@ -66,7 +63,6 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.os.RemoteException;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -93,7 +89,7 @@ import java.util.Locale;
  * @author Leif Hendrik Wilden
  */
 public class TrackListActivity extends AbstractSendToGoogleActivity
-    implements EulaCaller, FileTypeCaller, PlayMultipleCaller, ChooseAccountCaller, ConfirmSyncCaller {
+    implements  FileTypeCaller, PlayMultipleCaller, ChooseAccountCaller, ConfirmSyncCaller {
 
   private static final String TAG = TrackListActivity.class.getSimpleName();
   private static final String[] PROJECTION = new String[] { TracksColumns._ID, TracksColumns.NAME,
@@ -651,14 +647,6 @@ public class TrackListActivity extends AbstractSendToGoogleActivity
    * Shows start up dialogs.
    */
   public void showStartupDialogs() {
-    if (!EulaUtils.hasAcceptedEula(this)) {
-      Fragment fragment = getSupportFragmentManager()
-          .findFragmentByTag(EulaDialogFragment.EULA_DIALOG_TAG);
-      if (fragment == null) {
-        EulaDialogFragment.newInstance(false)
-            .show(getSupportFragmentManager(), EulaDialogFragment.EULA_DIALOG_TAG);
-      }
-    } else {
       // If stats_units_key is undefined, set it
       if (PreferencesUtils.getString(this,  R.string.stats_units_key, "").equals("")) {
         String statsUnits = getString(
@@ -667,16 +655,6 @@ public class TrackListActivity extends AbstractSendToGoogleActivity
         PreferencesUtils.setString(this, R.string.stats_units_key, statsUnits);        
       }
       checkGooglePlayServices();
-    }
-  }
-
-  @Override
-  public void onEulaDone() {
-    if (EulaUtils.hasAcceptedEula(this)) {
-      showStartupDialogs();
-      return;
-    }
-    finish();
   }
 
   private void checkGooglePlayServices() {

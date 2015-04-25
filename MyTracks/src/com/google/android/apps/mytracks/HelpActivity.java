@@ -16,8 +16,6 @@
 
 package com.google.android.apps.mytracks;
 
-import com.google.android.apps.mytracks.fragments.EulaDialogFragment;
-import com.google.android.apps.mytracks.fragments.EulaDialogFragment.EulaCaller;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GoogleFeedbackUtils;
 import com.google.android.apps.mytracks.util.SystemUtils;
@@ -41,7 +39,7 @@ import java.util.Locale;
  * 
  * @author Sandor Dornbush
  */
-public class HelpActivity extends AbstractMyTracksActivity implements EulaCaller {
+public class HelpActivity extends AbstractMyTracksActivity  {
 
   WebView webView;
 
@@ -110,10 +108,6 @@ public class HelpActivity extends AbstractMyTracksActivity implements EulaCaller
         intent.setData(Uri.parse("market://details?id=com.google.android.maps.mytracks"));
         startActivity(intent);
         return true;
-      case R.id.help_eula:
-        EulaDialogFragment.newInstance(true)
-            .show(getSupportFragmentManager(), EulaDialogFragment.EULA_DIALOG_TAG);
-        return true;
       case R.id.help_forum:
         intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(
@@ -125,8 +119,4 @@ public class HelpActivity extends AbstractMyTracksActivity implements EulaCaller
     }
   }
 
-  @Override
-  public void onEulaDone() {
-    // Do nothing
-  }
 }
